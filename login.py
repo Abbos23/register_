@@ -23,20 +23,51 @@ my_db = mysql.connector.connect(
     database="dang"
 )
 my_cursor = my_db.cursor()
+my_cursor.execute("create table register(id int(6) unsigned auto_increment primary key, name varchar(20), surname varchar(20), age int(3), login varchar(20), pasasword varchar (20))")
+my_db.commit()
 
 class Register:
     def __init__(self):
-        pass
+        self.manu()
 
 
     def manu(self):
-        pass
-    def choosed(self):
-        pass
+        answer = input("""
+What do you want?
+Please choose one of them
+
+Sig in [1]
+Log in [2]
+Exit   [3]\n:     
+""")
+        self.choosed(answer)
+
+
+
+
+    def choosed(self, chose):
+        if chose == '1':
+            clear_everything()
+            self.sig_in()
+        elif chose == '2':
+            clear_everything()
+            self.log_in()
+        elif chose == '3':
+            clear_everything()
+            print("Bye ;)")
+            exit()
+        else:
+            clear_everything()
+            self.manu()
+
+
+
+
 
     def sig_in(self):
         pass
-    def log_ing(self):
+
+    def log_in(self):
         pass
     def exit(self):
         pass
@@ -54,6 +85,11 @@ class Register:
         pass
     def choosed_in(self):
         pass
+
+
+    # def name_surname(self, name_surname):
+    #     name = input(f"Please enter your {name_surname}").strip().capitalize()
+
 
 
 register = Register()
