@@ -23,7 +23,7 @@ my_db = mysql.connector.connect(
     database="dang"
 )
 my_cursor = my_db.cursor()
-my_cursor.execute("create table register(id int(6) unsigned auto_increment primary key, name varchar(20), surname varchar(20), age int(3), login varchar(20), pasasword varchar (20))")
+my_cursor.execute("create table if not exists register(id int(6) unsigned auto_increment primary key, name varchar(20), surname varchar(20), age int(3), login varchar(20), pasasword varchar (20))")
 my_db.commit()
 
 class Register:
@@ -36,9 +36,11 @@ class Register:
 What do you want?
 Please choose one of them
 
-Sig in [1]
-Log in [2]
-Exit   [3]\n:     
+    Sig in [1]
+    Log in [2]
+    Exit   [3]
+
+ 
 """)
         self.choosed(answer)
 
@@ -65,7 +67,10 @@ Exit   [3]\n:
 
 
     def sig_in(self):
-        pass
+        name = self.name_surname("name")
+        surname = self.name_surname("surname")
+        age = self.age()
+
 
     def log_in(self):
         pass
@@ -87,8 +92,29 @@ Exit   [3]\n:
         pass
 
 
-    # def name_surname(self, name_surname):
-    #     name = input(f"Please enter your {name_surname}").strip().capitalize()
+    def name_surname(self, name_surname):
+        name = input(f"Please enter your {name_surname}:\n:").strip().capitalize()
+        if name:
+            return name
+        else:
+            error()
+            self.name_surname(name_surname)
+
+    def age(self):
+        age = input("Please enter your age:\n").strip()
+        if age:
+            if age.isdigit():
+                return age
+            else:
+                error()
+                self.age()
+        else:
+            error()
+            self.age()
+
+    # def login(self):
+    #     login = loggin
+
 
 
 
