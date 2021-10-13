@@ -78,20 +78,23 @@ Please choose one of them
 
 
     def log_in(self):
-        login = input("Please enter your login:\n").strip().lower()
-        if login:
-            my_cursor.execute(f"select * from register where login='{login}'")
-            result = my_cursor.fetchall()
-            if result:
-                current_password = result[0][5]
-                print(current_password)
+        while 1:
+            login = input("Please enter your login:\n").strip().lower()
+            if login:
+                my_cursor.execute(f"select * from register where login='{login}'")
+                result = my_cursor.fetchall()
+                if result:
+                    current_password = result[0][5]
+                    password = input("Please enter your password:\n")
+                    if current_password == password:
+                        self.manu_in()
+                    else:
+                        error()
+                else:
+                    error()
             else:
                 error()
-                self.login()
 
-        else:
-            error()
-            self.login()
 
     def exit(self):
         pass
