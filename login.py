@@ -23,7 +23,7 @@ my_db = mysql.connector.connect(
     database="dang"
 )
 my_cursor = my_db.cursor()
-my_cursor.execute("create table if not exists register(id int(6) unsigned auto_increment primary key, name varchar(20), surname varchar(20), age int(3), login varchar(20), pasasword varchar (20))")
+my_cursor.execute("create table if not exists register(id int(6) unsigned auto_increment primary key, name varchar(20), surname varchar(20), age int(3), login varchar(20), password varchar (20))")
 my_db.commit()
 
 class Register:
@@ -72,11 +72,27 @@ Please choose one of them
         age = self.age()
         login = self.login()
         password = self.password()
+        self.write_to_database(name, surname, age, login, password)
+
 
 
 
     def log_in(self):
-        pass
+        login = input("Please enter your login:\n").strip().lower()
+        if login:
+            my_cursor.execute(f"select * from register where login='{login}'")
+            result = my_cursor.fetchall()
+            if result:
+                current_password = result[0][5]
+                print(current_password)
+            else:
+                error()
+                self.login()
+
+        else:
+            error()
+            self.login()
+
     def exit(self):
         pass
     def update_login(self):
@@ -90,14 +106,40 @@ Please choose one of them
 
 
     def manu_in(self):
-        pass
-    def choosed_in(self):
-        pass
+        answer = input("""
+        What do you want?
+        Please choose one of them
 
+            Update login     [1]
+            Update paassword [2]
+            Log out          [3]
+            Delete account   [4]
 
+        """)
+        self.choosed_in(answer)
+
+    def choosed_in(self, chose):
+        if chose == '1':
+            clear_everything()
+            self.update_login()
+        elif chose == '2':
+            clear_everything()
+            self.update_password()
+        elif chose == '3':
+            clear_everything()
+            self.manu()
+        elif chose == '4':
+            clear_everything()
+            self.delete_account()
+        else:
+            clear_everything()
+            self.manu_in()
+
+    # ___________________________________For REGISTER_______________________________________________________
     def name_surname(self, name_surname):
         name = input(f"Please enter your {name_surname}:\n:").strip().capitalize()
         if name:
+            clear_everything()
             return name
         else:
             error()
@@ -107,6 +149,7 @@ Please choose one of them
         age = input("Please enter your age:\n").strip()
         if age:
             if age.isdigit():
+                clear_everything()
                 return age
             else:
                 error()
@@ -121,6 +164,7 @@ Please choose one of them
             my_cursor.execute(f"select * from register where login='{login}'")
             result = my_cursor.fetchall()
             if not result:
+                clear_everything()
                 return login
             else:
                 clear_everything()
@@ -135,6 +179,7 @@ Please choose one of them
         if passoword:
             passoword1 = input("Confirm password:\n")
             if passoword1 == passoword:
+                clear_everything()
                 return passoword
             else:
                 error()
@@ -144,9 +189,13 @@ Please choose one of them
             error()
             self.password()
 
-    
+    def write_to_database(self,name,surname,age,login,password):
+        clear_everything()
+        my_cursor.execute(f"insert into register(name,surname,age,login,password) values ('{name}','{surname}','{age}','{login}','{password}')")
+        my_db.commit()
+# _____________________________________________________________________________________________________
 
-
+# __________________________________OTHERS____________________________________________________________
 
 
 register = Register()
