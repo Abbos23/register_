@@ -28,6 +28,7 @@ my_db.commit()
 
 class Register:
     def __init__(self):
+        self.data = None
         self.manu()
 
 
@@ -84,9 +85,12 @@ Please choose one of them
                 my_cursor.execute(f"select * from register where login='{login}'")
                 result = my_cursor.fetchall()
                 if result:
+                    clear_everything()
+                    self.data = result
                     current_password = result[0][5]
                     password = input("Please enter your password:\n")
                     if current_password == password:
+                        clear_everything()
                         self.manu_in()
                     else:
                         error()
@@ -96,22 +100,36 @@ Please choose one of them
                 error()
 
 
-    def exit(self):
-        pass
     def update_login(self):
-        pass
+        login = self.login()
+        my_cursor.execute(f"update register set login='{login}' where login='{self.data[0][4]}'")
+        my_db.commit()
+        clear_everything()
+        print(f"Your login shanged to {login}")
+        self.manu_in()
+
     def update_password(self):
-        pass
+        password = self.password()
+        my_cursor.execute(f"update register set password='{password}' where login='{self.data[0][4]}'")
+        my_db.commit()
+        clear_everything()
+        print(f"Your password shanged to {password}")
+        self.manu_in()
+
     def log_out(self):
-        pass
+        self.manu()
     def delete_account(self):
-        pass
+        my_cursor.execute(f"delete from register where login='{self.data[0][4]}'")
+        clear_everything()
+        print("Your account deleted!")
+        self.manu()
+
 
 
     def manu_in(self):
         answer = input("""
-        What do you want?
-        Please choose one of them
+What do you want?
+Please choose one of them
 
             Update login     [1]
             Update paassword [2]
@@ -162,7 +180,7 @@ Please choose one of them
             self.age()
 
     def login(self):
-        login = input("Please enter login:\n").strip().lower()
+        login = input("Please enter new login:\n").strip().lower()
         if login:
             my_cursor.execute(f"select * from register where login='{login}'")
             result = my_cursor.fetchall()
@@ -178,7 +196,7 @@ Please choose one of them
             self.login()
 
     def password(self):
-        passoword = input("PLease enter password:\n").strip()
+        passoword = input("PLease enter new  password:\n").strip()
         if passoword:
             passoword1 = input("Confirm password:\n")
             if passoword1 == passoword:
