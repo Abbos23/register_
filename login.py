@@ -70,6 +70,9 @@ Please choose one of them
         name = self.name_surname("name")
         surname = self.name_surname("surname")
         age = self.age()
+        login = self.login()
+        password = self.password()
+
 
 
     def log_in(self):
@@ -112,8 +115,36 @@ Please choose one of them
             error()
             self.age()
 
-    # def login(self):
-    #     login = loggin
+    def login(self):
+        login = input("Please enter login:\n").strip().lower()
+        if login:
+            my_cursor.execute(f"select * from register where login='{login}'")
+            result = my_cursor.fetchall()
+            if not result:
+                return login
+            else:
+                clear_everything()
+                print("Sorry this login teken")
+                self.login()
+        else:
+            error()
+            self.login()
+
+    def password(self):
+        passoword = input("PLease enter password:\n").strip()
+        if passoword:
+            passoword1 = input("Confirm password:\n")
+            if passoword1 == passoword:
+                return passoword
+            else:
+                error()
+                self.password()
+
+        else:
+            error()
+            self.password()
+
+    
 
 
 
